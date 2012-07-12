@@ -1,6 +1,6 @@
 package view.diagram;
 
-import view.diagram.Anchor.RectangleAnchor;
+import view.diagram.anchor.RectangleAnchor;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -151,6 +151,7 @@ public abstract class RectangleElement extends DiagramElement{
     }
 
     void deleteElement() {
+
         factoryPanel.deleteRectangleElement(this);
     }
 }

@@ -1,7 +1,7 @@
 package view.diagram;
 
 import net.miginfocom.swing.MigLayout;
-import view.diagram.Anchor.RectangleAnchor;
+import view.diagram.anchor.RectangleAnchor;
 
 import javax.swing.*;
 import java.awt.*;

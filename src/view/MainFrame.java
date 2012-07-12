@@ -1,8 +1,11 @@
 package view;
 
+import net.miginfocom.swing.MigLayout;
 import view.diagram.FactoryPanel;
+import view.welcome.WelcomeFrame;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
 
@@ -33,21 +36,28 @@ public class MainFrame extends JFrame {
 
 		//invoke the components of the window
         this.setJMenuBar(new MainMenuBar());
-        FactoryPanel factoryPanel = new FactoryPanel(this);
-        this.add(factoryPanel);
+        this.setPreferredSize(new Dimension(900, 650));
         this.pack();
 		this.setVisible(true);
         /**
-        *Démarrage Message bienvenu
+        *Démarrage Message bienvenue
         */
-        //WelcomeFrame welcomeFrame = new WelcomeFrame(this);
+        WelcomeFrame welcomeFrame = new WelcomeFrame(this);
 	}
 
     public void initialize() {
-        this.add(new FactoryPanel(this));
+        FactoryPanel panel = new FactoryPanel(this);
+        panel.setLocation(0, 0);
+        this.getContentPane().setLayout(new MigLayout("fill, insets 0, debug"));
+        this.add(panel, "grow");
+
+        panel.createDatabaseModel();
     }
 
     public void initialize(String JSonFilePath) {
-        this.add(new FactoryPanel(this, JSonFilePath));
+        FactoryPanel panel = new FactoryPanel(this, JSonFilePath);
+        panel.setLocation(0, 0);
+        this.add(panel);
+        panel.createDatabaseModel();
     }
 }

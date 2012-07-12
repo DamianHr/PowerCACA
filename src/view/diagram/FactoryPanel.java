@@ -1,9 +1,11 @@
 package view.diagram;
 
 import model.diagram.DatabaseModel;
-import view.diagram.Anchor.LinkAnchor;
-import view.diagram.Anchor.RectangleAnchor;
-import view.diagram.Toolbox.ToolboxPanel;
+import net.miginfocom.swing.MigLayout;
+import view.diagram.anchor.LinkAnchor;
+import view.diagram.anchor.RectangleAnchor;
+import view.diagram.toolbox.ToolboxPanel;
+import view.wizard.CreateDatabase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,8 +55,10 @@ public class FactoryPanel extends JPanel{
     public FactoryPanel(JFrame frame) {
         this.frame = frame;
         this.setBackground(Color.WHITE);
+        this.setLayout(new MigLayout("fill, insets 0"));
         this.pane = new JLayeredPane();
-        this.pane.setPreferredSize(new Dimension(800,600));
+        this.pane.setLocation(0,0);
+        this.pane.setPreferredSize(frame.getSize());
         this.pane.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 createElement(e.getPoint());
@@ -69,7 +73,13 @@ public class FactoryPanel extends JPanel{
         toolboxPanel.addButton("Annotation", TOOL.ANNOTATION);
         this.pane.add(toolboxPanel, 10000);
 
-        this.add(pane);
+        this.add(pane, "grow");
+    }
+
+    public void createDatabaseModel() {
+        this.updateUI();
+        CreateDatabase createDatabase = new CreateDatabase(this);
+        databaseModel = (DatabaseModel)createDatabase.ShowDialog();
     }
 
     private void createElement(Point position) {

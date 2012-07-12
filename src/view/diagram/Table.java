@@ -1,8 +1,9 @@
 package view.diagram;
 
 import net.miginfocom.swing.MigLayout;
-import view.diagram.Anchor.RectangleAnchor;
+import view.diagram.anchor.RectangleAnchor;
 import view.wizard.CreateTable;
+import view.wizard.UpdateTable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,10 +48,9 @@ public class Table extends RectangleElement {
         this.initAnchors();
         this.refreshAnchors();
 
-        CreateTable createTable = new CreateTable(this.factoryPanel.getFrame(), FactoryPanel.databaseModel);
+        CreateTable createTable = new CreateTable(this.factoryPanel, FactoryPanel.databaseModel);
         nameModel = (String)createTable.ShowDialog();
-        //fillContent(nameModel); <-- Utiliser celle ci !
-        fillContent();
+        fillContent(FactoryPanel.databaseModel.getTables().get(nameModel));
     }
 
     public void setSize(int width, int height) {
@@ -61,34 +61,38 @@ public class Table extends RectangleElement {
         super.setSize(width, height);
     }
 
+    public void setLocation(int x, int y) {
+        if(x < 0) x = 0;
+        else if(y < 0) y = 0;
+        else if(x + this.getWidth() > factoryPanel.getWidth()) x = factoryPanel.getWidth() - this.getWidth();
+        else if(y + this.getHeight() > factoryPanel.getHeight()) y = factoryPanel.getHeight() - this.getHeight();
+        super.setLocation(x, y);
+    }
+
     public void editElement() {
-        //UpdateTable updateTable = new UpdateTable(this.frame, FactoryPanel.databaseModel.getTables().get(nameModel));
-        //Boolean updateDone = updateTable.ShowDialog();
-        //if(updateDone)
-            fillContent();
-        updateUI();
+        UpdateTable updateTable = new UpdateTable(this, FactoryPanel.databaseModel.getTables().get(this.nameModel));
+        Boolean updateDone = (Boolean)updateTable.ShowDialog();
+        if(updateDone)
+            fillContent(FactoryPanel.databaseModel.getTables().get(this.nameModel));
     }
 
     protected void deleteElement() {
-        //Suppression du model
-
+        factoryPanel.databaseModel.removeTable(this.nameModel);
         super.deleteElement();
     }
-    //private void fillContent(String tableName) {
-    private void fillContent() {
+    private void fillContent(model.diagram.Table table) {
         //Title
-        JLabel l =new JLabel("Hello");
+        JLabel l =new JLabel(table.getName());
         l.setOpaque(true);
         l.setBackground(new Color(234,234,234));
         l.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
 
         l.setHorizontalAlignment(JLabel.CENTER);
         this.add(l, "dock north, h 30px!");
-        //this.add(new JLabel(modelTable.getName()), "wrap, grow");
 
         //Fields
-        for(int i = 0; i < 3; i++){
-            JLabel label = new JLabel(" Field + " + i );
+        for(String field : table.getFieldNames()){
+            JLabel label = new JLabel(field + " " + table.getField(field).getFieldType());
             label.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
             this.add(label, "dock north, h 15px!");
         }

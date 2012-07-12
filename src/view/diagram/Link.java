@@ -1,6 +1,6 @@
 package view.diagram;
 
-import view.diagram.Anchor.LinkAnchor;
+import view.diagram.anchor.LinkAnchor;
 
 public class Link {
     private LinkAnchor firstAnchor;
