@@ -8,11 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: regisbelson
- * Date: 09/07/12
- * Time: 17:32
- * To change this template use File | Settings | File Templates.
  */
 public abstract class AnnotationEditor {
 

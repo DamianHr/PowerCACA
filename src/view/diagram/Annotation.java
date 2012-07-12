@@ -19,6 +19,12 @@ public class Annotation extends RectangleElement{
     private static final long serialVersionUID = 1L;
 
     private JTextArea textContainer;
+    public String getText() {
+        return this.textContainer.getText();
+    }
+    public void setText(String text) {
+        this.textContainer.setText(text);
+    }
 
     /**
      * Constructor of a new DiagramElement, used to Annotation, a default Dimension is set
@@ -64,8 +70,6 @@ public class Annotation extends RectangleElement{
         this.textContainer.setFont(new Font(Font.DIALOG, Font.ITALIC, 14));
         this.textContainer.setBackground(this.getBackground());
         this.add(this.textContainer, "grow, align center");
-
-        ArrayList<String> str = new ArrayList<String>();
     }
 
     /**
@@ -87,14 +91,5 @@ public class Annotation extends RectangleElement{
     public void editElement() {
         String newAnnon = AnnotationEditor.showDialog(this.factoryPanel.getFrame(), this.textContainer.getText());
         this.textContainer.setText(newAnnon);
-    }
-
-    /**
-     * Set the element content
-     * @param newString the new String of the element
-     */
-    private void fillContent(String newString) {
-        this.textContainer.setText(newString);
-        updateUI();
     }
 }

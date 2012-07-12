@@ -2,6 +2,7 @@ package view.diagram;
 
 import model.diagram.DatabaseModel;
 import net.miginfocom.swing.MigLayout;
+import org.json.simple.JSONObject;
 import view.diagram.anchor.LinkAnchor;
 import view.diagram.anchor.RectangleAnchor;
 import view.diagram.toolbox.ToolboxPanel;
@@ -15,7 +16,6 @@ import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 /**
- *
  */
 public class FactoryPanel extends JPanel{
 
@@ -35,7 +35,6 @@ public class FactoryPanel extends JPanel{
 
     static public JLayeredPane pane;
 
-    static public LinkAnchor currentLinkAnchor;
     static public RectangleElement currentRectangleElement;
 
     static  public DatabaseModel databaseModel;
@@ -91,14 +90,14 @@ public class FactoryPanel extends JPanel{
             }
             break;*/
             case TABLE: {
-                Table newTable = createTable(position);
+                Table newTable = createTable(position, null);
                 this.rectangleElements.add(newTable);
                 this.setCurrentRectangleElement(newTable);
                 bringElementToFront(newTable);
             }
             break;
             case ANNOTATION: {
-                Annotation newAnno = createComment(position);
+                Annotation newAnno = createComment(position, null);
                 this.rectangleElements.add(newAnno);
                 this.setCurrentRectangleElement(newAnno);
                 bringElementToFront(newAnno);
@@ -107,8 +106,12 @@ public class FactoryPanel extends JPanel{
         }
     }
 
-    private Table createTable(Point position) {
-        Table table = new Table(this, position);
+    private Table createTable(Point position, Dimension dimension) {
+        Table table;
+        if(dimension == null)
+            table = new Table(this, position);
+        else
+            table = new Table(this, position, dimension);
         pane.add(table);
         for(RectangleAnchor anchor : table.getAnchors()) {
             pane.add(anchor);
@@ -116,13 +119,17 @@ public class FactoryPanel extends JPanel{
         return table;
     }
 
-    private Annotation createComment(Point position) {
-        Annotation anno = new Annotation(this, position);
-        this.pane.add(anno);
-        for(RectangleAnchor anchor : anno.getAnchors()) {
+    private Annotation createComment(Point position, Dimension dimension) {
+        Annotation annotation;
+        if(dimension == null)
+            annotation = new Annotation(this, position);
+        else
+            annotation = new Annotation(this, position, dimension);
+        this.pane.add(annotation);
+        for(RectangleAnchor anchor : annotation.getAnchors()) {
             pane.add(anchor);
         }
-        return anno;
+        return annotation;
     }
 
     public void deleteRectangleElement(RectangleElement element) {
@@ -166,12 +173,54 @@ public class FactoryPanel extends JPanel{
         }
     };*/
 
-    private void drawBackground(Graphics2D g2d) {
+   /* private void drawBackground(Graphics2D g2d) {
         g2d.setColor(Color.GRAY);
         for(int x = 0; x < this.getSize().width; x+=30){
             for(int y = 0; y < this.getSize().height; y+=30){
                 Shape point = new Line2D.Float(new Point(x, y), new Point(x, y));
                 g2d.draw(point);
+            }
+        }
+    }*/
+
+    private JSONObject exportJSON() {
+        JSONObject jsonObject = new JSONObject();
+        //jsonObject.put("database", DatabaseModel.)
+        int i = 0;
+        for(RectangleElement rectangleElement : rectangleElements) {
+            JSONObject jsonRectangleElement = new JSONObject();
+            jsonRectangleElement.put("x", rectangleElement.getX());
+            jsonRectangleElement.put("y", rectangleElement.getX());
+            jsonRectangleElement.put("width", rectangleElement.getWidth());
+            jsonRectangleElement.put("height", rectangleElement.getHeight());
+            if(rectangleElement instanceof Table) {
+                jsonRectangleElement.put("nameModel", ((Table)rectangleElement).getNameModel());
+            }
+            else { // Annotation
+                jsonRectangleElement.put("text", ((Annotation)rectangleElement).getText());
+            }
+            jsonObject.put("rect"+i, jsonRectangleElement);
+            i++;
+        }
+        return jsonObject;
+    }
+
+    private void importJSON(JSONObject jsonObject) {
+        //databaseModel. = jsonObject.get("database");
+        int i = 0;
+        for(Object object : jsonObject.keySet()) {
+            if(((String)object).startsWith("rect")) {
+                JSONObject jsonRectangleElement = ((JSONObject)jsonObject.get(object));
+                Point point = new Point((Integer)jsonRectangleElement.get("x"), (Integer)jsonRectangleElement.get("y"));
+                Dimension dimension = new Dimension((Integer)jsonRectangleElement.get("width"), (Integer)jsonRectangleElement.get("height"));
+                if(jsonRectangleElement.get("nameModel") != null){
+                    Table table = createTable(point, dimension);
+                    table.setNameModel((String)jsonRectangleElement.get("nameModel"));
+                }
+                else {
+                    Annotation annotation = createComment(point, dimension);
+                    annotation.setText((String) jsonRectangleElement.get("text"));
+                }
             }
         }
     }

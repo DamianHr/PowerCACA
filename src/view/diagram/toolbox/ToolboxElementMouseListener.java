@@ -7,11 +7,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * Created with IntelliJ IDEA.
- * User: asus
- * Date: 07/07/12
- * Time: 22:45
- * To change this template use File | Settings | File Templates.
  */
 public class ToolboxElementMouseListener implements MouseListener, MouseMotionListener{
     JComponent target;

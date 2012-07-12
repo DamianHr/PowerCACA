@@ -1,6 +1,7 @@
 package view.diagram;
 
 import net.miginfocom.swing.MigLayout;
+import org.json.simple.JSONObject;
 import view.diagram.anchor.RectangleAnchor;
 import view.wizard.CreateTable;
 import view.wizard.UpdateTable;
@@ -14,18 +15,15 @@ public class Table extends RectangleElement {
     /**
      *
      */
-    final private Dimension BIGSIZE = new Dimension(130, 180);
-    final private Dimension SMALLSIZE = new Dimension(130, 40);
     private Dimension minSize = new Dimension(130, 32);
     private static final long serialVersionUID = 1L;
-    private Point defaultPos = new Point(0,0);
-    private Dimension defaultDim = BIGSIZE;
-    private Color defaultColor = Color.WHITE;
 
     private String nameModel;
-
-    public Table(FactoryPanel factoryPanel) {
-        this(factoryPanel, new Point(0, 0));
+    public String getNameModel() {
+        return this.nameModel;
+    }
+    public void setNameModel(String nameModel) {
+        this.nameModel = nameModel;
     }
 
     public Table(FactoryPanel factoryPanel, Point pos) {
@@ -50,7 +48,8 @@ public class Table extends RectangleElement {
 
         CreateTable createTable = new CreateTable(this.factoryPanel, FactoryPanel.databaseModel);
         nameModel = (String)createTable.ShowDialog();
-        fillContent(FactoryPanel.databaseModel.getTables().get(nameModel));
+        if(FactoryPanel.databaseModel.getTables().get(nameModel)!=null)
+            fillContent(FactoryPanel.databaseModel.getTables().get(nameModel));
     }
 
     public void setSize(int width, int height) {
@@ -80,8 +79,10 @@ public class Table extends RectangleElement {
         factoryPanel.databaseModel.removeTable(this.nameModel);
         super.deleteElement();
     }
+
     private void fillContent(model.diagram.Table table) {
         //Title
+        this.removeAll();
         JLabel l =new JLabel(table.getName());
         l.setOpaque(true);
         l.setBackground(new Color(234,234,234));

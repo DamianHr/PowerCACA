@@ -1,5 +1,6 @@
 package view.diagram;
 
+import org.json.simple.JSONObject;
 import view.diagram.anchor.RectangleAnchor;
 
 import java.awt.*;
@@ -136,12 +137,13 @@ public abstract class RectangleElement extends DiagramElement{
         super.setSize(width, height);
     }
 
-    /*public void setLocation(int x, int y) {
+    public void setLocation(int x, int y) {
         if(x < 0) x = 0;
         else if(y < 0) y = 0;
         else if(x + this.getWidth() > factoryPanel.getWidth()) x = factoryPanel.getWidth() - this.getWidth();
         else if(y + this.getHeight() > factoryPanel.getHeight()) y = factoryPanel.getHeight() - this.getHeight();
-    }*/
+        super.setLocation(x,y);
+    }
 
     /**
      * Reset the content of the current element

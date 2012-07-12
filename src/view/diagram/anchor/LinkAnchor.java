@@ -9,11 +9,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Ellipse2D;
 
 /**
- * Created with IntelliJ IDEA.
- * User: asus
- * Date: 08/07/12
- * Time: 22:50
- * To change this template use File | Settings | File Templates.
  */
 public class LinkAnchor extends JPanel {
     public LinkAnchor(Point pos, Boolean fixed) {
